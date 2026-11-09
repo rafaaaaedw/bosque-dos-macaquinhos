@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Uma aventura com IA — Bosque dos Macaquinhos</title>
+<style>
+:root{
+ --cream:#fff9ed;--pink:#ffd9e8;--pink2:#f7b9d2;--lilac:#e6dcff;
+ --purple:#8c72c9;--green:#d9f2d2;--mint:#bfe8d5;--brown:#765342;
+ --ink:#59485f;--white:#fffdf9;--yellow:#ffe9a8;
+}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;padding:28px 18px 70px;background:
+ radial-gradient(circle at 8% 10%,#ffe3ef 0 100px,transparent 101px),
+ radial-gradient(circle at 94% 90%,#e4ddff 0 150px,transparent 151px),var(--cream);
+ color:var(--ink);font-family:"Trebuchet MS",Arial,sans-serif;display:flex;justify-content:center;align-items:center;overflow-x:hidden}
+main{width:min(100%,680px);position:relative}
+.story{position:relative;background:rgba(255,253,249,.96);border:3px solid #f4d9e9;border-radius:30px;padding:clamp(25px,6vw,48px);text-align:center;box-shadow:0 15px 0 #eadcf7,0 22px 45px #8e6d9a20;overflow:hidden}
+.story:before,.story:after{content:"✿";position:absolute;color:#f2b9d1;font-size:28px;opacity:.7}
+.story:before{top:14px;left:20px}.story:after{bottom:14px;right:20px}
+.monkey{position:absolute;z-index:2;font-size:clamp(38px,7vw,58px);filter:drop-shadow(0 5px 2px #7a55451a);animation:float 3s ease-in-out infinite}
+.monkey.left{left:-22px;top:24px;transform:rotate(-12deg)}.monkey.right{right:-22px;bottom:35px;animation-delay:1s}
+.vine{position:absolute;top:0;left:50%;width:160px;height:15px;border-radius:0 0 50% 50%;background:#b9dfb2;transform:translateX(-50%);opacity:.65}
+.kicker{display:inline-block;background:var(--green);color:#5e8967;padding:7px 14px;border-radius:99px;font-size:11px;font-weight:bold;letter-spacing:.08em;text-transform:uppercase;margin:10px 0 18px}
+h1{font-size:clamp(28px,6vw,39px);line-height:1.1;color:var(--purple);margin:0 0 18px}
+p{font-size:15px;line-height:1.75;margin:0 auto 24px;max-width:56ch}
+.progress{height:9px;background:#f1e9fa;border-radius:99px;margin:0 0 8px;overflow:hidden}
+.bar{height:100%;width:0;background:linear-gradient(90deg,#f7b6d0,#b9a2ef,#a9dfbf);border-radius:99px;transition:width .35s}
+.progress-label{font-size:10px;color:#a194b4;text-align:right;margin-bottom:15px}
+.choices{display:grid;gap:12px}
+.choice{border:2px solid #e9dff8;border-radius:17px;background:#f7f1ff;color:#66567a;padding:15px 18px;font-size:14px;line-height:1.5;cursor:pointer;transition:transform .18s,box-shadow .18s,border-color .18s;font-family:inherit}
+.choice.primary{background:#ffdce9;border-color:#f5c2d7;color:#8a5570;font-weight:bold}
+.choice:hover{transform:translateY(-3px);box-shadow:0 5px 0 #e8d8f4;border-color:#cdb9ef}
+.choice:focus-visible{outline:3px solid #8c72c9;outline-offset:3px}
+footer{position:fixed;bottom:12px;left:0;width:100%;text-align:center;font-size:11px;color:#a18cae}
+@keyframes float{0%,100%{translate:0 0}50%{translate:0 -8px}}
+@media(max-width:500px){body{padding:20px 12px 60px}.story{padding:27px 19px;border-radius:24px}.monkey.left{left:-8px;top:5px}.monkey.right{right:-7px;bottom:8px}p{font-size:14px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+<div class="monkey left" aria-hidden="true">🐒</div>
+<div class="monkey right" aria-hidden="true">🐵</div>
+<section class="story" aria-live="polite">
+<div class="vine"></div>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<div class="progress-label" id="progressLabel">começando a aventura ✨</div>
+<div class="kicker" id="kicker">Uma aventura no bosque</div>
+<h1 id="title">O bosque encantado da inteligência artificial</h1>
+<p id="text">No Bosque dos Macaquinhos, a curiosa Mimi encontra uma invenção que pode ajudar todos os animais: uma inteligência artificial! Mas como usá-la de um jeito justo, seguro e divertido?</p>
+<div class="choices" id="choices">
+<button class="choice primary" onclick="start()">🌸 Começar a aventura</button>
+</div>
+</section>
+</main>
+<footer>feito com carinho no Bosque dos Macaquinhos 🌷</footer>
+<script>
+const scenes={
+ intro:{k:"🌷 Capítulo 1 • Uma descoberta",t:"O bosque encantado da IA",p:"No Bosque dos Macaquinhos, a curiosa Mimi encontra uma invenção que pode ajudar todos os animais: uma inteligência artificial! Mas como usá-la de um jeito justo, seguro e divertido?",c:[["🐒 Vamos descobrir como funciona!","discover"],["🍓 Primeiro, ouvir os amigos do bosque","friends"]]},
+ discover:{k:"🍄 Capítulo 2 • A ideia",t:"Uma ajudinha inteligente",p:"Mimi percebe que a IA pode ajudar a organizar os livros da biblioteca, explicar assuntos difíceis e criar ideias para as aulas. Só que, às vezes, ela também dá respostas erradas.",c:[["Usar a IA como ajudante e conferir as respostas","check"],["Deixar a IA resolver tudo sozinha","alone"]]},
+ friends:{k:"🌼 Capítulo 2 • Conversa na clareira",t:"Cada bichinho tem uma ideia",p:"O coelho quer aprender mais rápido, a tartaruga se preocupa com os dados pessoais e o tucano lembra que nem todos têm acesso à tecnologia.",c:[["Juntar as ideias e criar combinados","rules"],["Escolher só a ideia mais rápida","alone"]]},
+ check:{k:"🧁 Capítulo 3 • Aprender juntinhos",t:"A IA também pode errar!",p:"Mimi e seus amigos testam a ferramenta com perguntas divertidas. Eles descobrem que comparar fontes e conversar com alguém de confiança ajuda a separar informação correta de confusão.",c:[["Criar regras de uso para todo mundo","rules"],["Compartilhar todas as respostas sem conferir","oops"]]},
+ alone:{k:"🌧️ Capítulo 3 • Um pequeno problema",t:"Ops, a tecnologia não sabe tudo",p:"A IA dá uma resposta equivocada e alguns bichinhos ficam confusos. Mimi entende que a tecnologia precisa de orientação, cuidado e pessoas por perto.",c:[["Pedir ajuda e revisar o que aconteceu","rules"],["Continuar usando sem verificar","oops"]]},
+ oops:{k:"🪻 Capítulo 4 • Hora de repensar",t:"Um recomeço mais cuidadoso",p:"Os amigos percebem que usar a IA sem pensar pode espalhar erros e expor informações. Eles decidem fazer uma pausa e conversar sobre segurança e responsabilidade.",c:[["Montar um acordo coletivo","rules"]]},
+ rules:{k:"🌈 Capítulo 4 • O combinado do bosque",t:"Uma IA amiga de todos",p:"A turma cria três combinados: não compartilhar dados pessoais, conferir informações importantes e usar a IA para apoiar — nunca substituir — a criatividade e o pensamento de cada um.",c:[["Ver como termina essa aventura","ending"]]},
+ ending:{k:"🌟 Final • Uma escolha consciente",t:"O bosque fica mais brilhante!",p:"Com os combinados, Mimi e seus amigos usam a inteligência artificial para aprender, criar e resolver problemas juntos. Eles descobrem que a tecnologia fica muito melhor quando é guiada por empatia, responsabilidade e curiosidade. E o bosque? Ficou cheio de ideias… e macaquinhos felizes! 🐒🌸",c:[["🔄 Brincar de novo","intro"]]}
+};
+let current="intro",step=0;
+function render(id){current=id;const s=scenes[id];document.getElementById("kicker").textContent=s.k;document.getElementById("title").textContent=s.t;document.getElementById("text").textContent=s.p;document.getElementById("choices").innerHTML=s.c.map((x,i)=>`<button class="choice ${i===0?"primary":""}" onclick="go('${x[1]}')">${x[0]}</button>`).join("");step++;document.getElementById("bar").style.width=(id==="intro"?0:id==="ending"?100:Math.min(88,step*15))+"%";document.getElementById("progressLabel").textContent=id==="ending"?"aventura concluída ✨":id==="intro"?"começando a aventura ✨":"sua aventura está avançando 🌱"}
+function start(){render("discover")}function go(id){if(id==="intro")step=0;render(id)}
+</script>
+</body>
+</html>
